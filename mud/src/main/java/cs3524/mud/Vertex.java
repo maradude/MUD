@@ -1,5 +1,6 @@
 /***********************************************************************
  * cs3524.mud.Vertex
+ * aka location in game,
  ***********************************************************************/
 
 package cs3524.mud;
@@ -8,45 +9,38 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
-import java.util.Iterator;
+import java.util.Map.Entry;
 
 // Represents a location in the MUD (a vertex in the graph).
-class Vertex
-{
-    public String _name;             // Vertex name
-    public String _msg = "";         // Message about this location
-    public Map<String,Edge> _routes; // Association between direction
-				     // (e.g. "north") and a path
-				     // (Edge)
-    public List<String> _things;     // The things (e.g. players) at
-				     // this location
+class Vertex {
+	public String name; // Vertex name
+	public String message = ""; // Message about this location
+	public Map<String, Edge> routes; // Association between direction
+	// (e.g. "north") and a path
+	// (Edge)
+	public List<String> things; // The things (e.g. players) at
+	// this location
 
-    public Vertex( String nm )
-    {
-	_name = nm;
-	_routes = new HashMap<String,Edge>(); // Not synchronised
-	_things = new Vector<String>();       // Synchronised
-    }
+	public Vertex(String nm) {
+		name = nm;
+		routes = new HashMap<String, Edge>(); // Not synchronised
+		things = new Vector<String>(); // Synchronised
+	}
 
-    public String toString()
-    {
-	String summary = "\n";
-	summary += _msg + "\n";
-	Iterator iter = _routes.keySet().iterator();
-	String direction;
-	while (iter.hasNext()) {
-	    direction = (String)iter.next();
-	    summary += "To the " + direction + " there is " + ((Edge)_routes.get( direction ))._view + "\n";
+	public String toString() {
+		var summary = new StringBuilder();
+		summary.append("\n");
+		summary.append(message + "\n");
+		for (Entry<String, Edge> route : routes.entrySet()) {
+			summary.append("To the ");
+			summary.append(route.getKey());
+			summary.append(" there is ");
+			summary.append(route.getValue().view);
+			summary.append("\n");
+		}
+		summary.append("You can see: ");
+		summary.append(String.join(" ", things));
+		summary.append("\n\n");
+		return summary.toString();
 	}
-	iter = _things.iterator();
-	if (iter.hasNext()) {
-	    summary += "You can see: ";
-	    do {
-		summary += iter.next() + " ";
-	    } while (iter.hasNext());
-	}
-	summary += "\n\n";
-	return summary;
-    }
 }
-
