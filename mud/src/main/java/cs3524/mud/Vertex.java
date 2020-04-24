@@ -2,7 +2,7 @@
  * cs3524.mud.Vertex
  ***********************************************************************/
 
-package src.main.java.cs3524.mud;
+package cs3524.mud;
 
 import java.util.Map;
 import java.util.HashMap;

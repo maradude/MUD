@@ -2,7 +2,7 @@
  * cs3524.mud.MUD
  ***********************************************************************/
 
-package src.main.java.cs3524.mud;
+package cs3524.mud;
 
 import java.io.FileReader;
 import java.io.BufferedReader;

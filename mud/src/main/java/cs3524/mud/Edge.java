@@ -2,7 +2,7 @@
  * cs3524.mud.Edge
  ***********************************************************************/
 
-package src.main.java.cs3524.mud;
+package cs3524.mud;
 
 // Represents an path in the MUD (an edge in a graph).
 class Edge
