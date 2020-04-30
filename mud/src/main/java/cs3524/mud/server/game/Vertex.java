@@ -3,7 +3,7 @@
  * aka location in game,
  ***********************************************************************/
 
-package cs3524.mud;
+package cs3524.mud.server.game;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ class Vertex {
 		things = new Vector<String>(); // Synchronised
 	}
 
-	public String toString() {
+	public String toString(String playerName) {
 		var summary = new StringBuilder();
 		summary.append("\n");
 		summary.append(message + "\n");
@@ -39,7 +39,15 @@ class Vertex {
 			summary.append("\n");
 		}
 		summary.append("You can see: ");
-		summary.append(String.join(" ", things));
+		for (var thing : things) {
+			// don't print the player itself
+			if (!thing.equals(playerName)) {
+				System.out.println(playerName);
+				System.out.println(thing);
+				summary.append(' ' + thing);
+			}
+			System.out.println(thing);
+		}
 		summary.append("\n\n");
 		return summary.toString();
 	}

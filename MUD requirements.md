@@ -40,19 +40,19 @@
 1. Multiple user support
 2. Player can move in any direction
 3. Players can see other users in MUD world
-4. Users can pickup things in the MUD
+4. **Users can pickup things in the MUD**
 5. Command set
    1. make moves
    2. lists players at current location
    3. list things in current location
    4. pickup a thing ==// should thing be item in these cases?==, can disallow picking up players
-   5. show players inventory
-   6. help to show command list
+   5. **show players inventory**
+   6. **help to show command list**
    7. Allow player to set their own name
-   8. Manually print start locations information
-   9. when player presses `ENTER`, print current location information
+   8. **Manually print start locations information**
+   9. **when player presses `ENTER`, print current location information**
       1. no need to clear screen before hand
-6. On item pickup remove item from location
+6. **On item pickup remove item from location**
 
 ## B
 

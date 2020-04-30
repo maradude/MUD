@@ -2,7 +2,7 @@
  * cs3524.mud.MUD
  ***********************************************************************/
 
-package cs3524.mud;
+package cs3524.mud.server.game;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.HashMap;
@@ -27,6 +26,7 @@ public class MUD {
     // A record of all the vertices in the MUD graph. HashMaps are not
     // synchronized, but we don't really need this to be synchronised.
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
+    private Vector<String> activePlayers = new Vector<>();
 
     private String startLocation = "";
 
@@ -42,10 +42,10 @@ public class MUD {
     /**
      * Create a new thing at a location.
      */
-    private void createThing(String loc, String thing) {
-        Vertex v = getOrCreateVertex(loc);
-        v.things.add(thing);
-    }
+    // private void createThing(String loc, String thing) {
+    // Vertex v = getOrCreateVertex(loc);
+    // v.things.add(thing);
+    // }
 
     /**
      * Change the message associated with a location.
@@ -99,6 +99,7 @@ public class MUD {
                 }
                 addEdge(source, dest, dir, msg);
             }
+            edges.close();
         } catch (IOException e) {
             System.err.println("Graph.createEdges( String " + edgesfile + ")\n" + e.getMessage());
         }
@@ -132,6 +133,7 @@ public class MUD {
                     first = false;
                 }
             }
+            messages.close();
         } catch (IOException e) {
             System.err.println("Graph.recordMessages( String " + messagesfile + ")\n" + e.getMessage());
         }
@@ -189,7 +191,7 @@ public class MUD {
         for (Entry<String, Vertex> loc : vertexMap.entrySet()) {
             summary.append("Node: ");
             summary.append(loc.getKey());
-            summary.append(loc.getValue().toString());
+            summary.append(loc.getValue().toString(""));
         }
         summary.append("Start location = " + startLocation);
         return summary.toString();
@@ -198,8 +200,8 @@ public class MUD {
     /**
      * A method to provide a string describing a particular location.
      */
-    public String locationInfo(String loc) {
-        return getVertex(loc).toString();
+    public String locationInfo(String playerName, String loc) {
+        return getVertex(loc).toString(playerName);
     }
 
     /**
@@ -212,17 +214,24 @@ public class MUD {
     /**
      * Add a thing to a location; used to enable us to add new users.
      */
-    public void addThing(String loc, String thing) {
+    public boolean addThing(String loc, String thing) {
         Vertex v = getVertex(loc);
-        v.things.add(thing);
+        return v.things.add(thing);
     }
 
     /**
      * Remove a thing from a location.
+     *
+     * Returns true if thing existed
      */
-    public void delThing(String loc, String thing) {
+    public boolean delThing(String loc, String thing) {
         Vertex v = getVertex(loc);
-        v.things.remove(thing);
+        return v.things.remove(thing);
+    }
+
+    public void createPlayer(String name) {
+        addThing(startLocation, name);
+        activePlayers.add(name);
     }
 
     /**
@@ -251,4 +260,5 @@ public class MUD {
         MUD m = new MUD(args[0], args[1], args[2]);
         System.out.println(m.toString());
     }
+
 }

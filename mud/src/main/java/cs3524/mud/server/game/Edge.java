@@ -3,7 +3,7 @@
  * aka path you can walk through or peek at
  ***********************************************************************/
 
-package cs3524.mud;
+package cs3524.mud.server.game;
 
 // Represents an path in the MUD (an edge in a graph).
 class Edge {
