@@ -30,10 +30,13 @@ public class Client {
         try {
             var man = (ConnectionFactoryInterface) Naming.lookup(regURL);
             ConnectionInterface conn = man.getConnection();
-            var player = new Player(conn);
-            cli = new userInputHandler(conn, player);
-            player.joinGame(cli.getName());
-            cli.run();
+            cli = new userInputHandler();
+            String server = cli.selectServer(conn.listGames());
+            String userName = cli.getName();
+            var gameManager = new GameManager(conn, userName, server);
+            // gameManager.joinGame(server);
+            // var newPlayer = gameManager.createPlayer();
+            cli.runGame(gameManager);
 
         } catch (NotBoundException e) {
             System.err.println(regURL + " not bound in rmiregistry.");
@@ -43,9 +46,9 @@ public class Client {
             // e.printStackTrace( System.err );
         } catch (RemoteException e) {
             System.err.println("Error contacting remote objects on host " + hostname);
-            e.printStackTrace( System.err );
-		} catch (MaxConnectionsException e) {
-			System.err.println("Too many clients connected, try again alter");
+            e.printStackTrace(System.err);
+        } catch (MaxConnectionsException e) {
+            System.err.println("Too many clients connected, try again alter");
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();
@@ -53,19 +56,19 @@ public class Client {
     }
 
     // private void connect(ConnectionFactoryInterface man) {
-	// 	try {
-	// 		ConnectionInterface con;
-	// 		if ((con = man.getConnection()) != null) {
-	// 			con.release();
-	// 		} else {
-	// 			System.out.println("Client " + id + " has been refused a connection.");
-	// 		}
-	// 	} catch (RemoteException e) {
-	// 		System.err.println("ClientThread: id=" + id + " remote exception caught.");
-	// 		e.printStackTrace(System.err);
-	// 	} catch (Exception e) {
-	// 		e.printStackTrace(System.err);
-	// 	}
+    // try {
+    // ConnectionInterface con;
+    // if ((con = man.getConnection()) != null) {
+    // con.release();
+    // } else {
+    // System.out.println("Client " + id + " has been refused a connection.");
+    // }
+    // } catch (RemoteException e) {
+    // System.err.println("ClientThread: id=" + id + " remote exception caught.");
+    // e.printStackTrace(System.err);
+    // } catch (Exception e) {
+    // e.printStackTrace(System.err);
+    // }
     // }
 
     /*

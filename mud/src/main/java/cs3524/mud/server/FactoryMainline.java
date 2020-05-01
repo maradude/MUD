@@ -35,7 +35,7 @@ import cs3524.mud.server.game.MUD;
  * <li>args[1] = the port on which to export objects.
  *
  * @see ConnectionFactoryInterface
- * @see ConnectionFactoryImpl
+ * @see ConnectionFactory
  *
  * @author Tim Norman, University of Aberdeen
  * @version 1.0
@@ -64,8 +64,9 @@ public class FactoryMainline {
 			return;
 		}
 		var server = new FactoryMainline(args);
-        MUD mudMaster = new MUD(server.edgesfile, server.messagesfile, server.thingsfile);
-        System.out.println(mudMaster.toString());
+		MUD.setDefaultConfigFiles(server.edgesfile, server.messagesfile, server.thingsfile);
+		MUD.initialMUDs(4);
+		MUD.setDefaultMUD(MUD.MUDList().firstElement());
 
 		try {
 			// rmi stuff
@@ -73,7 +74,7 @@ public class FactoryMainline {
 
 			// factory stuff
 
-			var serv = new ConnectionFactoryImpl(server.serverport, server.maxConnections, mudMaster);
+			var serv = new ConnectionFactory(server.serverport, server.maxConnections);
 			var stub = (ConnectionFactoryInterface) UnicastRemoteObject.exportObject(serv, server.serverport);
 			Naming.rebind("rmi://" + hostname + ":" + server.registryport + "/MUD", stub);
 

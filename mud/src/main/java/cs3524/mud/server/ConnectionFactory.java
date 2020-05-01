@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 // import java.util.Vector;
 
-import cs3524.mud.server.game.MUD;
 
 import java.rmi.server.UID;
 import java.rmi.server.UnicastRemoteObject;
@@ -31,26 +30,24 @@ import java.rmi.server.UnicastRemoteObject;
  * @version 1.0
  */
 
-public class ConnectionFactoryImpl implements ConnectionFactoryInterface {
+public class ConnectionFactory implements ConnectionFactoryInterface {
     private Set<String> conIDs;
     private int serverport;
     private int maxConnections;
-    private MUD masterMud;
-    // private MUD defaultMud;
 
     // public boolean setNewID(String newID, String oldID) {
-    //     return conIDs.add(newID) && conIDs.remove(oldID);
+    // return conIDs.add(newID) && conIDs.remove(oldID);
     // }
     /**
      * Initialise the vector of connection identifiers.
      */
 
-    public ConnectionFactoryImpl(int serverport, int maxConnections, MUD masterMud) throws RemoteException {
+    public ConnectionFactory(int serverport, int maxConnections) throws RemoteException {
         conIDs = new HashSet<String>();
         this.serverport = serverport;
         this.maxConnections = maxConnections;
-        this.masterMud = masterMud;
     }
+
 
     /**
      * Get an ID using java.rmi.server.UID, record it, generate a ConnectionImpl
@@ -72,7 +69,7 @@ public class ConnectionFactoryImpl implements ConnectionFactoryInterface {
             conIDs.add(id);
         }
         System.out.println("Connection with ID=" + id + " generated.");
-        var conn = new ConnectionImpl(id, this, masterMud);
+        var conn = new Connection(id, this);
         var stub = (ConnectionInterface) UnicastRemoteObject.exportObject(conn, serverport);
         return stub;
     }

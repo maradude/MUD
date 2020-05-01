@@ -40,13 +40,10 @@ class Vertex {
 		}
 		summary.append("You can see: ");
 		for (var thing : things) {
-			// don't print the player itself
+			// don't print the player themself
 			if (!thing.equals(playerName)) {
-				System.out.println(playerName);
-				System.out.println(thing);
 				summary.append(' ' + thing);
 			}
-			System.out.println(thing);
 		}
 		summary.append("\n\n");
 		return summary.toString();

@@ -6,6 +6,7 @@ package cs3524.mud.server;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  * The remote persona of a connection.
@@ -28,7 +29,11 @@ public interface ConnectionInterface extends Remote {
      * Obtain location info
      */
 
-    public void createPlayer(String name) throws RemoteException;
+    public String getGameName() throws RemoteException;
+
+    public void createPlayer(String name, String loc) throws RemoteException;
+
+    public List<String> listGames() throws RemoteException;
 
     // public void setName(String loc, String thing, String Name);
 
@@ -43,4 +48,7 @@ public interface ConnectionInterface extends Remote {
      * Release the connection.
      */
     public void release() throws RemoteException;
+
+	public boolean joinServer(String player, String location, String game) throws RemoteException;
+
 }

@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - userInputHandler",
+            "request": "launch",
+            "mainClass": "cs3524.mud.server.game.userInputHandler",
+            "projectName": "mud"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}"
@@ -17,6 +24,23 @@
             "mainClass": "cs3524.mud.MUD",
             "projectName": "mud",
             "args": "mud/src/main/resources/mymud.edg mud/src/main/resources/mymud.msg mud/src/main/resources/mymud.thg"
+        }, {
+            "type": "java",
+            "name": "Debug (Launch)-Client",
+            "console": "integratedTerminal",
+            "request": "launch",
+            "mainClass": "cs3524.mud.client.Client",
+            "projectName": "mud",
+            "args": "localhost 5000"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Server",
+            "console": "integratedTerminal",
+            "request": "launch",
+            "mainClass": "cs3524.mud.server.FactoryMainline",
+            "projectName": "mud",
+            "args": "5000 5001 10 mud/target/classes/mymud.edg mud/target/classes/mymud.msg mud/target/classes/mymud.thg"
         }
     ]
 }

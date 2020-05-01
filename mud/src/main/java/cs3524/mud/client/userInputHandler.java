@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
-
-import cs3524.mud.server.ConnectionInterface;
+import java.util.List;
 
 /*
 1. Player can make at least 1 move in at least 1 direction
@@ -13,14 +12,11 @@ import cs3524.mud.server.ConnectionInterface;
 3. Prints location info after chaningin to new location
 */
 public class userInputHandler {
-    BufferedReader stdin;
-    ConnectionInterface conn;
-    Player player;
+    private BufferedReader stdin;
+    private GameManager games;
 
-    public userInputHandler(ConnectionInterface connection, Player player) {
+    public userInputHandler() {
         stdin = new BufferedReader(new InputStreamReader(System.in));
-        conn = connection;
-        this.player = player;
     }
 
     private void sendUserInput(BufferedReader stdin) throws IOException {
@@ -41,6 +37,31 @@ public class userInputHandler {
         return name;
     }
 
+    public void printGames(List<String> servers) throws RemoteException {
+        System.out.println("current games: " + String.join(", ", servers));
+    }
+
+    public String selectServer(List<String> servers) throws RemoteException {
+        var formattedServers = "current games: " + String.join(", ", servers);
+        String chosenServer = null;
+        try {
+            while (true) {
+                System.out.println("Please select from the list of available games");
+                System.out.println(formattedServers);
+
+                chosenServer = stdin.readLine();
+                if (servers.contains(chosenServer.trim())) {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return chosenServer;
+    }
+
     private void commandParser(String message) throws RemoteException {
         String parsed[] = message.split(" ", 2);
         String cmd = parsed[0];
@@ -48,9 +69,10 @@ public class userInputHandler {
         if (parsed.length > 1) {
             arg = parsed[1];
         }
+        Player player = games.getPlayer();
         switch (cmd) {
             case "":
-                player.lookAround();
+                player.lookAround(player.getCurrentLocation());
                 break;
             case "move":
                 player.move(arg);
@@ -65,20 +87,28 @@ public class userInputHandler {
                 printCommands();
                 break;
             case "origin":
-                player.lookAround(player.getStartingLocation());
+                player.lookAround(games.getStartLocation());
                 break;
+            case "games":
+                var servers = games.listServers();
+                System.out.println("current games: " + String.join(", ", servers));
+                break;
+            case "join":
+                games.joinGame(arg);
+                break;
+            default:
+                System.out.print("unkown command");
         }
         System.out.print("");
         System.out.print("> ");
     }
 
     private void printCommands() {
-        String commands = "Look around by pressing enter with no input\n" +
-        "Move by typing 'move' and a cardinal direction {north, east, west, south}\n" +
-        "To pickup an item in your current location type 'get' and the items name\n" +
-        "To look into your inventory type 'inventory'\n" +
-        "To see this help text again, type 'help'"
-        ;
+        String commands = "Look around by pressing enter with no input\n"
+                + "Move by typing 'move' and a cardinal direction {north, east, west, south}\n"
+                + "To pickup an item in your current location type 'get' and the items name\n"
+                + "To look into your inventory type 'inventory'\n" + "To see this help text again, type 'help'\n"
+                + "To see currently existing MUDs, type 'games'\n";
         System.out.println(commands);
     }
 
@@ -88,7 +118,8 @@ public class userInputHandler {
         }
     }
 
-    public void run() {
+    public void runGame(GameManager game) {
+        this.games = game;
         System.out.print("> ");
         try {
             while (true) {

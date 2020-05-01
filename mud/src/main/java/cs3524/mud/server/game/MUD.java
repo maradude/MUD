@@ -13,12 +13,16 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A class that can be used to represent a MUD; essenially, this is a graph.
  */
 
 public class MUD {
+    private static String edgeFile, messageFile, thingFile;
+    private static Vector<MUD> muds = new Vector<>();
+    private static MUD defaultMUD;
     /**
      * Private stuff
      */
@@ -27,6 +31,7 @@ public class MUD {
     // synchronized, but we don't really need this to be synchronised.
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
     private Vector<String> activePlayers = new Vector<>();
+    private String name;
 
     private String startLocation = "";
 
@@ -37,6 +42,18 @@ public class MUD {
         Vertex v = getOrCreateVertex(sourceName);
         Vertex w = getOrCreateVertex(destName);
         v.routes.put(direction, new Edge(w, view));
+    }
+
+    public static MUD getDefaultMUD() {
+        return defaultMUD;
+    }
+
+    public static void setDefaultMUD(MUD defaultMUD) {
+        MUD.defaultMUD = defaultMUD;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     /**
@@ -174,13 +191,22 @@ public class MUD {
     /**
      * A constructor that creates the MUD.
      */
-    public MUD(String edgesfile, String messagesfile, String thingsfile) {
+    public MUD(String name, String edgesfile, String messagesfile, String thingsfile) {
         createEdges(edgesfile);
         recordMessages(messagesfile);
         recordThings(thingsfile);
+        this.name = name;
+        MUD.muds.add(this);
 
         System.out.println("Files read...");
         System.out.println(vertexMap.size() + " vertices\n");
+    }
+
+    public static MUD createDefaultMUD(String name){
+        var defaultMUD = new MUD(name, MUD.edgeFile, MUD.messageFile, MUD.thingFile);
+
+        System.out.println("default MUD generated");
+        return defaultMUD;
     }
 
     // This method enables us to display the entire MUD (mostly used
@@ -219,6 +245,14 @@ public class MUD {
         return v.things.add(thing);
     }
 
+    public List<String> listPlayers() {
+        return this.activePlayers;
+    }
+
+    public boolean removePlayer(String player) {
+        return this.activePlayers.remove(player);
+    }
+
     /**
      * Remove a thing from a location.
      *
@@ -229,8 +263,8 @@ public class MUD {
         return v.things.remove(thing);
     }
 
-    public void createPlayer(String name) {
-        addThing(startLocation, name);
+    public void addPlayer(String name, String loc) {
+        addThing(loc, name);
         activePlayers.add(name);
     }
 
@@ -257,8 +291,35 @@ public class MUD {
             System.err.println("Usage: java Graph <edgesfile> <messagesfile> <thingsfile>");
             return;
         }
-        MUD m = new MUD(args[0], args[1], args[2]);
+        MUD m = new MUD("main-server",args[0], args[1], args[2]);
         System.out.println(m.toString());
     }
+
+    public static void setDefaultConfigFiles(String edgeFile, String messageFile, String thingFile) {
+        MUD.edgeFile = edgeFile;
+        MUD.messageFile = messageFile;
+        MUD.thingFile = thingFile;
+    }
+
+    public static void initialMUDs(int n) {
+        for (int i = 1; i <= n; i++) {
+            MUD.createDefaultMUD(String.format("mud%d", i));
+        }
+    }
+
+    public static Vector<MUD> MUDList() {
+        return MUD.muds;
+    }
+
+	public static MUD getMUD(String game) {
+        return MUD.muds.stream().filter(x -> x.getName().equals(game)).findAny().orElse(null);
+	}
+
+	public void remove(String player) {
+	}
+
+	// public boolean join(String player) {
+
+	// }
 
 }

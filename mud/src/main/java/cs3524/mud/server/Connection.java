@@ -5,6 +5,8 @@
 package cs3524.mud.server;
 
 import java.rmi.RemoteException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import cs3524.mud.server.game.MUD;
 
@@ -30,14 +32,14 @@ import cs3524.mud.server.game.MUD;
  * parameters to the constructor of this class.
  *
  * @see ConnectionInterface
- * @see ConnectionFactoryImpl#getConnection()
- * @see ConnectionFactoryImpl#releaseConnection( String )
+ * @see ConnectionFactory#getConnection()
+ * @see ConnectionFactory#releaseConnection( String )
  *
  * @author Tim Norman, University of Aberdeen
  * @version 1.0
  */
 
-public class ConnectionImpl implements ConnectionInterface {
+public class Connection implements ConnectionInterface {
     private MUD game;
     private String id;
     private ConnectionFactoryInterface factory;
@@ -47,12 +49,16 @@ public class ConnectionImpl implements ConnectionInterface {
      * current time.
      */
 
-    public ConnectionImpl(String id, ConnectionFactoryInterface factory, MUD game) throws RemoteException {
+    public Connection(String id, ConnectionFactoryInterface factory) throws RemoteException {
         this.id = id;
         this.factory = factory;
-        this.game = game;
+        this.game = MUD.getDefaultMUD();
     }
 
+
+    public String getGameName() throws RemoteException{
+        return this.game.getName();
+    }
     /**
      * Allows the client to obtain the identifier of this connection. In a practical
      * application this should be kept private between the funnel manager and the
@@ -68,18 +74,37 @@ public class ConnectionImpl implements ConnectionInterface {
         return id;
     }
 
+    public List<String> listGames() throws RemoteException {
+        var names = MUD.MUDList().stream()
+                            .map(MUD::getName)
+                            .collect(Collectors.toList());
+        return names;
+    }
+
+	public boolean joinServer(String player, String loc, String game) throws RemoteException {
+        var newMud = MUD.getMUD(game);
+        if (newMud == null) {
+            return false;
+        }
+        this.game.removePlayer(player);
+        this.game.delThing(loc, player);
+        newMud.addPlayer(player, loc);
+        this.game = newMud;
+        return true;
+    }
+
     /**
      * Causes the thread in which this connection is running to sleep for a number
      * of milliseconds.
      *
      * <p>
-     * Note that although this remote method is void, the client thread that called
+     s* Note that although this remote method is void, the client thread that called
      * this method will suspend until the method returns; RMI is an example of a
      * synchronous communication mechanism.
      */
 
-    public void createPlayer(String name) throws RemoteException {
-        game.createPlayer(name);
+    public void createPlayer(String name, String loc) throws RemoteException {
+        game.addPlayer(name, loc);
     }
 
     public boolean pickUpThing(String loc, String thing) throws RemoteException {
