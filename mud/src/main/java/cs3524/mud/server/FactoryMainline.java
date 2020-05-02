@@ -51,16 +51,16 @@ public class FactoryMainline {
 	 public FactoryMainline(String args[]){
 		registryport = Integer.parseInt(args[0]);
 		serverport = Integer.parseInt(args[1]);
-		maxConnections = Integer.parseInt(args[2]);
-		edgesfile = args[3];
-		messagesfile = args[4];
-		thingsfile = args[5];
+		edgesfile = args[2];
+		messagesfile = args[3];
+		thingsfile = args[4];
+		maxConnections = 10;
 		PolicyReader.registerPolicy("mud.policy");
 	 }
 	public static void main(String args[]) {
-		if (args.length < 6) {
+		if (args.length < 5) {
 			System.err.println(
-					"Usage:\njava cs3515.examples.factory.FactoryMainline <registryport> <serverport> <maxConnections> <edgesfile> <messagesfile> <thingsfile>");
+					"Usage:\njava cs3515.examples.factory.FactoryMainline <registryport> <serverport> <edgesfile> <messagesfile> <thingsfile>");
 			return;
 		}
 		var server = new FactoryMainline(args);

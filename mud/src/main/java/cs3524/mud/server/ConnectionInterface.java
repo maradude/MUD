@@ -35,6 +35,8 @@ public interface ConnectionInterface extends Remote {
 
     public List<String> listGames() throws RemoteException;
 
+    public List<String> listPlayers() throws RemoteException;
+
     // public void setName(String loc, String thing, String Name);
 
     public String getLocationInfo(String playerName, String loc) throws RemoteException;
@@ -50,5 +52,10 @@ public interface ConnectionInterface extends Remote {
     public void release() throws RemoteException;
 
 	public boolean joinServer(String player, String location, String game) throws RemoteException;
+
+	public boolean createNewGame(String serverName) throws RemoteException;
+
+	public int leaveGame(String name, String loc, String game) throws RemoteException;
+
 
 }

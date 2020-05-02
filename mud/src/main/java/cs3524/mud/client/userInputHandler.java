@@ -46,9 +46,7 @@ public class userInputHandler {
         String chosenServer = null;
         try {
             while (true) {
-                System.out.println("Please select from the list of available games");
-                System.out.println(formattedServers);
-
+                System.out.print("Please select from the list of available games\n" + formattedServers + "\n> ");
                 chosenServer = stdin.readLine();
                 if (servers.contains(chosenServer.trim())) {
                     break;
@@ -96,19 +94,38 @@ public class userInputHandler {
             case "join":
                 games.joinGame(arg);
                 break;
+            case "end":
+                games.leaveGame(arg);
+                break;
+            case "create":
+                games.createNewGame(arg);
+                break;
+            case "where":
+                games.getCurrentGameName();
+                break;
+            case "players":
+                games.listPlayers();
+                break;
             default:
-                System.out.print("unkown command");
+                System.out.println("unkown command");
         }
         System.out.print("");
         System.out.print("> ");
     }
 
     private void printCommands() {
-        String commands = "Look around by pressing enter with no input\n"
-                + "Move by typing 'move' and a cardinal direction {north, east, west, south}\n"
-                + "To pickup an item in your current location type 'get' and the items name\n"
-                + "To look into your inventory type 'inventory'\n" + "To see this help text again, type 'help'\n"
-                + "To see currently existing MUDs, type 'games'\n";
+        String commands = "[GAME CONTROLS]\n" + "- Look around by pressing enter with no input\n"
+                + "- Move by typing 'move' and a cardinal direction {north, east, west, south}\n"
+                + "- To pickup an item in your current location type 'get' and the items name\n"
+                + "- To look into your inventory type 'inventory'\n" + "\n[GAME MANAGER]\n"
+                + "- To see this help text again, type 'help'\n" + "- To see currently existing MUDs, type 'games'\n"
+                + "- To see what's in the starting location, type 'origin'\n"
+                + "- To join a new game from existing MUDs, type 'join' followed by the games name\n"
+                + ">> This will create a new character in that game for you (don't worry your old character is still safe but hidden)"
+                + "- To create a new MUD game, type 'create' followed by a unique name for the game\n"
+                + "- To permanently delete your character in another game, type 'end' followed by the games name"
+                + "- To see active players in your current game, type 'players'"
+                + "- To see in which game you are, type 'where'";
         System.out.println(commands);
     }
 

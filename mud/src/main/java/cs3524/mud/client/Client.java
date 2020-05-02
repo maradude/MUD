@@ -31,11 +31,14 @@ public class Client {
             var man = (ConnectionFactoryInterface) Naming.lookup(regURL);
             ConnectionInterface conn = man.getConnection();
             cli = new userInputHandler();
-            String server = cli.selectServer(conn.listGames());
             String userName = cli.getName();
-            var gameManager = new GameManager(conn, userName, server);
-            // gameManager.joinGame(server);
-            // var newPlayer = gameManager.createPlayer();
+            var gameManager = new GameManager(conn, userName);
+            String server;
+            boolean success = false;
+            while (!success) {
+                server = cli.selectServer(conn.listGames());
+                success = gameManager.joinGame(server);
+            }
             cli.runGame(gameManager);
 
         } catch (NotBoundException e) {

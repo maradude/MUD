@@ -23,6 +23,8 @@ public class MUD {
     private static String edgeFile, messageFile, thingFile;
     private static Vector<MUD> muds = new Vector<>();
     private static MUD defaultMUD;
+    private static int maxMUDs = 5;
+    private static int defaultMaxPlayers = 4;
     /**
      * Private stuff
      */
@@ -32,6 +34,7 @@ public class MUD {
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
     private Vector<String> activePlayers = new Vector<>();
     private String name;
+    private int maxPlayers;
 
     private String startLocation = "";
 
@@ -42,6 +45,14 @@ public class MUD {
         Vertex v = getOrCreateVertex(sourceName);
         Vertex w = getOrCreateVertex(destName);
         v.routes.put(direction, new Edge(w, view));
+    }
+
+    public static int getDefaultMaxPlayers() {
+        return defaultMaxPlayers;
+    }
+
+    public static void setDefaultMaxPlayers(int defaultMaxPlayers) {
+        MUD.defaultMaxPlayers = defaultMaxPlayers;
     }
 
     public static MUD getDefaultMUD() {
@@ -191,22 +202,26 @@ public class MUD {
     /**
      * A constructor that creates the MUD.
      */
-    public MUD(String name, String edgesfile, String messagesfile, String thingsfile) {
+    public MUD(String name, int maxPlayers, String edgesfile, String messagesfile, String thingsfile) {
         createEdges(edgesfile);
         recordMessages(messagesfile);
         recordThings(thingsfile);
         this.name = name;
+        this.maxPlayers = maxPlayers;
         MUD.muds.add(this);
 
         System.out.println("Files read...");
         System.out.println(vertexMap.size() + " vertices\n");
     }
 
-    public static MUD createDefaultMUD(String name){
-        var defaultMUD = new MUD(name, MUD.edgeFile, MUD.messageFile, MUD.thingFile);
+    public static boolean createGenericMUD(String name) {
+        if (MUD.MUDList().size() >= MUD.maxMUDs) {
+            return false;
+        }
+        new MUD(name, MUD.defaultMaxPlayers, MUD.edgeFile, MUD.messageFile, MUD.thingFile);
 
         System.out.println("default MUD generated");
-        return defaultMUD;
+        return true;
     }
 
     // This method enables us to display the entire MUD (mostly used
@@ -263,9 +278,13 @@ public class MUD {
         return v.things.remove(thing);
     }
 
-    public void addPlayer(String name, String loc) {
+    public boolean addPlayer(String name, String loc) {
+        if (activePlayers.size() >= maxPlayers) {
+            return false;
+        }
         addThing(loc, name);
         activePlayers.add(name);
+        return true;
     }
 
     /**
@@ -291,7 +310,7 @@ public class MUD {
             System.err.println("Usage: java Graph <edgesfile> <messagesfile> <thingsfile>");
             return;
         }
-        MUD m = new MUD("main-server",args[0], args[1], args[2]);
+        MUD m = new MUD("main-server", 5, args[0], args[1], args[2]);
         System.out.println(m.toString());
     }
 
@@ -303,7 +322,7 @@ public class MUD {
 
     public static void initialMUDs(int n) {
         for (int i = 1; i <= n; i++) {
-            MUD.createDefaultMUD(String.format("mud%d", i));
+            MUD.createGenericMUD(String.format("mud%d", i));
         }
     }
 
@@ -311,15 +330,15 @@ public class MUD {
         return MUD.muds;
     }
 
-	public static MUD getMUD(String game) {
+    public static MUD getMUD(String game) {
         return MUD.muds.stream().filter(x -> x.getName().equals(game)).findAny().orElse(null);
-	}
+    }
 
-	public void remove(String player) {
-	}
+    public void remove(String player) {
+    }
 
-	// public boolean join(String player) {
+    // public boolean join(String player) {
 
-	// }
+    // }
 
 }
