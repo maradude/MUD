@@ -1,5 +1,11 @@
-/*******************************************************************
+/*
+* Martti Aukia 51657228
+*******************************************************************
  * cs3515.examples.factory.ConnectionInterface                      *
+ * from factory practical of the course
+ * changes made by the student:
+ * apply auto formatting
+ * @see cs3524.mud.Connection for details on changes
  *******************************************************************/
 
 package cs3524.mud.server;
@@ -46,16 +52,14 @@ public interface ConnectionInterface extends Remote {
     public String move(String loc, String dir, String name) throws RemoteException;
 
     public boolean pickUpThing(String loc, String thing) throws RemoteException;
+
     /**
      * Release the connection.
      */
     public void release() throws RemoteException;
 
-	public boolean joinServer(String player, String location, String game) throws RemoteException;
+    public boolean joinServer(String player, String location, String game) throws RemoteException;
 
-	public boolean createNewGame(String serverName) throws RemoteException;
-
-	public int leaveGame(String name, String loc, String game) throws RemoteException;
-
+    public boolean createNewGame(String serverName) throws RemoteException;
 
 }

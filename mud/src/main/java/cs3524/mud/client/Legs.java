@@ -1,3 +1,8 @@
+/*
+* Martti Aukia 51657228
+Handles user requests to the server related to moving the player from
+one location to another.
+*/
 package cs3524.mud.client;
 
 import java.rmi.RemoteException;

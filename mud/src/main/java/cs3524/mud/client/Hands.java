@@ -1,3 +1,9 @@
+/*
+* Martti Aukia 51657228
+Handles user request to the server related to manipulating items,
+i.e. adding an item from the world into the player's
+inventory.
+*/
 package cs3524.mud.client;
 
 import java.rmi.RemoteException;

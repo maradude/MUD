@@ -1,3 +1,12 @@
+/*
+* Martti Aukia 51657228
+Code is adapted from cs3518.examples.factory.ClientSimulator/ClientThread
+
+Class registers user connection to the server via RMI,
+inits the local information for game playing,
+inits user input handling
+*/
+
 package cs3524.mud.client;
 
 import java.net.MalformedURLException;
@@ -43,10 +52,8 @@ public class Client {
 
         } catch (NotBoundException e) {
             System.err.println(regURL + " not bound in rmiregistry.");
-            // e.printStackTrace( System.err );
         } catch (MalformedURLException e) {
             System.err.println(regURL + " not a correctly formed URL.");
-            // e.printStackTrace( System.err );
         } catch (RemoteException e) {
             System.err.println("Error contacting remote objects on host " + hostname);
             e.printStackTrace(System.err);
@@ -57,22 +64,6 @@ public class Client {
             e.printStackTrace();
         }
     }
-
-    // private void connect(ConnectionFactoryInterface man) {
-    // try {
-    // ConnectionInterface con;
-    // if ((con = man.getConnection()) != null) {
-    // con.release();
-    // } else {
-    // System.out.println("Client " + id + " has been refused a connection.");
-    // }
-    // } catch (RemoteException e) {
-    // System.err.println("ClientThread: id=" + id + " remote exception caught.");
-    // e.printStackTrace(System.err);
-    // } catch (Exception e) {
-    // e.printStackTrace(System.err);
-    // }
-    // }
 
     /*
      * args[0] = The DNS entry for the host on which the server is running.

@@ -1,3 +1,9 @@
+/*
+* Martti Aukia 51657228
+* Main class for handling the game state clientside
+* keeps track of user created characters
+* handles game creation, ending, changing
+*/
 package cs3524.mud.client;
 
 import java.rmi.RemoteException;
@@ -8,11 +14,11 @@ import java.util.Map;
 import cs3524.mud.server.ConnectionInterface;
 
 public class GameManager {
-    private ConnectionInterface conn;
-    private Player activeCharacter;
-    private Map<String, Player> characters;
-    private String currentGame;
-    private String userName;
+    private ConnectionInterface conn; // connection to server
+    private Player activeCharacter; // current user "focus" character
+    private Map<String, Player> characters; // (server name => player instance), stores users characters
+    private String currentGame; // current user "focus" game
+    private String userName; // user specified name used for all characters
     private String startingLocation;
 
     public GameManager(ConnectionInterface conn, String userName) throws RemoteException {
@@ -34,22 +40,18 @@ public class GameManager {
         return this.startingLocation;
     }
 
+    /*
+     * create a new player instance and add it to the specified server if the user
+     * already had a character on the server instead return null also register that
+     * character and server relationship
+     */
     private Player createPlayer(String server) throws RemoteException {
-        var character = new Player(this, conn);
         if (characters.containsKey(server)) {
             return null;
         }
+        var character = new Player(this, conn);
         characters.put(server, character);
         return character;
-    }
-
-    public void addPlayerToServer(String server, Player player) throws RemoteException {
-        conn.createPlayer(userName, startingLocation);
-    }
-
-    public void joinNewGame(Player player) throws RemoteException {
-        conn.createPlayer(userName, player.getLocation());
-        player.lookAround(player.getCurrentLocation());
     }
 
     private void setActiveCharacter(Player player) {
@@ -64,28 +66,21 @@ public class GameManager {
         return conn.listGames();
     }
 
+    /*
+     * if a name of a mud game where the player has a character is given, remove
+     * that character. Essentially removes the stored location and inventory of the
+     * character
+     */
     public void leaveGame(String game) throws RemoteException {
         Player player = this.characters.get(game);
         if (validateServerName(game) && player != null) {
-            int status = conn.leaveGame(player.getName(), player.getCurrentLocation(), game);
-            switch (status) {
-                case 0:
-                    System.out.println("Successfully left " + game);
-                    this.characters.remove(game);
-                    break;
-                case 1:
-                    System.out.println("Game " + game + " not found");
-                    break;
-                case 2:
-                    System.out.println("You are not registed in " + game);
-                    break;
-                default:
-                    System.out.println("Unsuccessfully in leaving " + game);
-            }
+            this.characters.remove(game);
         }
-
     }
 
+    /*
+     * Check common problems in user inputted server names
+     */
     private boolean validateServerName(String serverName) throws RemoteException {
         List<String> servers;
         boolean valid = false;
@@ -102,6 +97,11 @@ public class GameManager {
         return valid;
     }
 
+    /*
+     * if the mud game name provided by the player is valid, create a new character
+     * or load an existing character if the user has already joined the server
+     * before. Leave the current
+     */
     public boolean joinGame(String serverName) throws RemoteException {
         boolean success = false;
         if (validateServerName(serverName)) {

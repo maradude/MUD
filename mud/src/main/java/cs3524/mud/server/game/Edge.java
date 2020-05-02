@@ -1,6 +1,9 @@
 /***********************************************************************
+* Martti Aukia 51657228
  * cs3524.mud.Edge
  * aka path you can walk through or peek at
+ *
+ * Untouched by student, apart from stylistic refactoring
  ***********************************************************************/
 
 package cs3524.mud.server.game;

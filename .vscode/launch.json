@@ -40,7 +40,7 @@
             "request": "launch",
             "mainClass": "cs3524.mud.server.FactoryMainline",
             "projectName": "mud",
-            "args": "5000 5001 10 mud/target/classes/mymud.edg mud/target/classes/mymud.msg mud/target/classes/mymud.thg"
+            "args": "5000 5001 mud/target/classes/mymud.edg mud/target/classes/mymud.msg mud/target/classes/mymud.thg"
         }
     ]
 }

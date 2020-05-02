@@ -1,3 +1,12 @@
+/*
+* Martti Aukia 51657228
+the users character for a given MUD-game. A player
+is created for each MUD game and this object will handle
+the players state. The most times assumes that the information
+this object holds in true and valid.
+
+Also acts as a controller for most server requests related classes.
+*/
 package cs3524.mud.client;
 
 import java.rmi.RemoteException;

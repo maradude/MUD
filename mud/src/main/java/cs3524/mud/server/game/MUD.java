@@ -1,5 +1,32 @@
 /***********************************************************************
+* Martti Aukia 51657228
  * cs3524.mud.MUD
+ * Student modifications:
+ * remove underscore prefix convention
+ * apply auto formatting
+ * removed unused method: private void createThing( String loc, String thing );
+ * changed to use StringBuilder: public String toString();
+ * changed to return boolean on success status: public boolean addThing(String loc, String thing);
+ * added:
+ *  private static String edgeFile, messageFile, thingFile;
+    private static Vector<MUD> muds = new Vector<>();
+    private static MUD defaultMUD;
+    private static int maxMUDs = 5;
+    private Vector<String> activePlayers = new Vector<>();
+    private String name;
+    private int maxPlayers;
+    public static int getDefaultMaxPlayers();
+    public static void setDefaultMaxPlayers(int defaultMaxPlayers);
+    public static MUD getDefaultMUD();
+    public static void setDefaultMUD(MUD defaultMUD);
+    public String getName();
+    public static boolean createGenericMUD(String name);
+    public List<String> listPlayers();
+    public boolean removePlayer(String player);
+    public static void setDefaultConfigFiles(String edgeFile, String messageFile, String thingFile);
+    public static void initialMUDs(int n);
+    public static Vector<MUD> MUDList();
+    public static MUD getMUD(String game);
  ***********************************************************************/
 
 package cs3524.mud.server.game;
@@ -20,11 +47,13 @@ import java.util.List;
  */
 
 public class MUD {
-    private static String edgeFile, messageFile, thingFile;
-    private static Vector<MUD> muds = new Vector<>();
-    private static MUD defaultMUD;
-    private static int maxMUDs = 5;
-    private static int defaultMaxPlayers = 4;
+    private static String edgeFile, messageFile, thingFile; // default files for creating a MUD instance
+    private static Vector<MUD> muds = new Vector<>(); // collection of all MUDs existing
+    private static MUD defaultMUD; // a specific MUD that is used for initial communication between server and
+                                   // client
+    private static int maxMUDs = 5; // a default number of the maximum amount of MUDs that are allowed to exist
+    private static int defaultMaxPlayers = 4; // the default number of players active players allowed in a single MUD
+
     /**
      * Private stuff
      */
@@ -32,9 +61,11 @@ public class MUD {
     // A record of all the vertices in the MUD graph. HashMaps are not
     // synchronized, but we don't really need this to be synchronised.
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
-    private Vector<String> activePlayers = new Vector<>();
-    private String name;
-    private int maxPlayers;
+    private Vector<String> activePlayers = new Vector<>(); // currently "focussed" players in a MUD game
+    private String name; // this MUD games name, needs to be unique as used to identify mud and access
+                         // mud
+    private int maxPlayers; // limit on active players, doesn't count players not currently "focussed" on
+                            // the game
 
     private String startLocation = "";
 
@@ -66,14 +97,6 @@ public class MUD {
     public String getName() {
         return this.name;
     }
-
-    /**
-     * Create a new thing at a location.
-     */
-    // private void createThing(String loc, String thing) {
-    // Vertex v = getOrCreateVertex(loc);
-    // v.things.add(thing);
-    // }
 
     /**
      * Change the message associated with a location.
@@ -214,6 +237,10 @@ public class MUD {
         System.out.println(vertexMap.size() + " vertices\n");
     }
 
+    /*
+     * factory method for creating a MUD with the default edges, messages, things
+     * and player limits. Used by players to created a new game
+     */
     public static boolean createGenericMUD(String name) {
         if (MUD.MUDList().size() >= MUD.maxMUDs) {
             return false;
@@ -270,7 +297,6 @@ public class MUD {
 
     /**
      * Remove a thing from a location.
-     *
      * Returns true if thing existed
      */
     public boolean delThing(String loc, String thing) {
@@ -301,25 +327,15 @@ public class MUD {
         return e.destination.name;
     }
 
-    /**
-     * A main method that can be used to testing purposes to ensure that the MUD is
-     * specified correctly.
-     */
-    public static void main(String[] args) {
-        if (args.length != 3) {
-            System.err.println("Usage: java Graph <edgesfile> <messagesfile> <thingsfile>");
-            return;
-        }
-        MUD m = new MUD("main-server", 5, args[0], args[1], args[2]);
-        System.out.println(m.toString());
-    }
-
     public static void setDefaultConfigFiles(String edgeFile, String messageFile, String thingFile) {
         MUD.edgeFile = edgeFile;
         MUD.messageFile = messageFile;
         MUD.thingFile = thingFile;
     }
 
+    /*
+    * create n generic muds with mud%d name
+    */
     public static void initialMUDs(int n) {
         for (int i = 1; i <= n; i++) {
             MUD.createGenericMUD(String.format("mud%d", i));
@@ -334,11 +350,16 @@ public class MUD {
         return MUD.muds.stream().filter(x -> x.getName().equals(game)).findAny().orElse(null);
     }
 
-    public void remove(String player) {
+    /**
+     * A main method that can be used to testing purposes to ensure that the MUD is
+     * specified correctly.
+     */
+    public static void main(String[] args) {
+        if (args.length != 3) {
+            System.err.println("Usage: java Graph <edgesfile> <messagesfile> <thingsfile>");
+            return;
+        }
+        MUD m = new MUD("test-game", 5, args[0], args[1], args[2]);
+        System.out.println(m.toString());
     }
-
-    // public boolean join(String player) {
-
-    // }
-
 }

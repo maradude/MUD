@@ -1,3 +1,6 @@
+/*
+* Martti Aukia 51657228
+*/
 package cs3524.mud.server;
 
 public class MaxConnectionsException extends Exception{

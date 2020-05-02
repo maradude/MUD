@@ -1,5 +1,24 @@
 /*******************************************************************
+* Martti Aukia 51657228
  * cs3515.examples.factory.ConnectionImpl                          *
+ * Taken from the factory practical
+ * changes made by student:
+ * apply auto formatting
+ * removed Impl from class name
+ * stores the current MUD the player is connected
+ * requires MUD to have a default instance to on instansiation
+ * ^(mainly for communicating what the start location should be for the player)
+ * additions:
+ * public String getGameName() throws RemoteException;
+   public List<String> listGames() throws RemoteException;
+   public boolean createNewGame(String serverName) throws RemoteException;
+   public boolean joinServer(String player, String loc, String game) throws RemoteException;
+   public List<String> listPlayers() throws RemoteException;
+   public void createPlayer(String name, String loc) throws RemoteException;
+   public boolean pickUpThing(String loc, String thing) throws RemoteException;
+   public String getLocationInfo(String playerName, String loc) throws RemoteException;
+   public String getStartLocation() throws RemoteException;
+   public String move(String loc, String dir, String name) throws RemoteException;
  *******************************************************************/
 
 package cs3524.mud.server;
@@ -74,6 +93,9 @@ public class Connection implements ConnectionInterface {
         return id;
     }
 
+    /*
+    * show the names of all MUDs
+    */
     public List<String> listGames() throws RemoteException {
         var names = MUD.MUDList().stream().map(MUD::getName).collect(Collectors.toList());
         return names;
@@ -83,6 +105,12 @@ public class Connection implements ConnectionInterface {
         return MUD.createGenericMUD(serverName);
     }
 
+    /*
+    * if the name is existing mud game, add a player to the active players of
+    * that game, add the player to the specified location as a thing, remove the player
+    * from the active players of the old server and remove them from the graph of the old MUD
+    * return true if everything went successfully
+    */
     public boolean joinServer(String player, String loc, String game) throws RemoteException {
         var newMud = MUD.getMUD(game);
         if (newMud == null) {
@@ -101,17 +129,6 @@ public class Connection implements ConnectionInterface {
         }
     }
 
-    public int leaveGame(String name, String loc, String game) {
-        var mud = MUD.getMUD(game);
-        int status;
-        if (mud == null) {
-            status = 1;
-        }
-        status = mud.removePlayer(name) ? 0 : 2;
-        status = mud.delThing(loc, name) ? 0 : 3;
-        return status;
-    }
-
     public List<String> listPlayers() throws RemoteException {
         return this.game.listPlayers();
     }
@@ -126,10 +143,16 @@ public class Connection implements ConnectionInterface {
      * of a synchronous communication mechanism.
      */
 
+     /*
+     * add player to location and active players list
+     */
     public void createPlayer(String name, String loc) throws RemoteException {
         game.addPlayer(name, loc);
     }
 
+    /*
+    * returns true if removal from the location was successful
+    */
     public boolean pickUpThing(String loc, String thing) throws RemoteException {
         return game.delThing(loc, thing);
     }

@@ -1,6 +1,9 @@
 /***********************************************************************
+* Martti Aukia 51657228
  * cs3524.mud.Vertex
  * aka location in game,
+ * changed to use StringBuilder and not print thing if same name as player: public String toString(String playerName);
+ * apply auto formatting
  ***********************************************************************/
 
 package cs3524.mud.server.game;

@@ -1,3 +1,7 @@
+/*
+* Martti Aukia 51657228
+Players collection for things.
+*/
 package cs3524.mud.client;
 
 import java.util.ArrayList;

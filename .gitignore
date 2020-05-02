@@ -126,3 +126,6 @@ local.properties
 
 # my stuff
 *.tgz
+junk/Security.java
+junk/Server.java
+junk/factory

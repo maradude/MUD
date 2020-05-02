@@ -1,5 +1,12 @@
-/*******************************************************************
+/*
+* Martti Aukia 51657228
+*******************************************************************
  * cs3515.examples.factory.FactoryMainline                         *
+ * from factory practical of the course
+ * changes made by student:
+ * apply auto formatting
+ * remove maxConnetion from cli arguments and use hardcoded instead
+ * add new cli arguments for files necessary for MUD class
  *******************************************************************/
 /* updated to Java 8: RMISecurityManager is deprecated
  * MK, 2016-01-27
@@ -57,6 +64,13 @@ public class FactoryMainline {
 		maxConnections = 10;
 		PolicyReader.registerPolicy("mud.policy");
 	 }
+
+	 /*
+	 * Used as the main method for the whole server side.
+	 * Makes ConnectionFactory available for clients via RMI
+
+	 * sets up default MUD arguments
+	 */
 	public static void main(String args[]) {
 		if (args.length < 5) {
 			System.err.println(

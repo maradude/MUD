@@ -1,5 +1,6 @@
 /*******************************************************************
  * cs3515.examples.factory.ConnectionFactoryInterface              *
+ * apply auto formatting
  *******************************************************************/
 
 package cs3524.mud.server;
@@ -8,7 +9,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * The remote persona of a ConnectionFactory object.
+ * Martti Aukia 51657228 The remote persona of a ConnectionFactory object.
  *
  * <p>
  * Any implementation of this interface must implement at least these methods.

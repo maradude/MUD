@@ -1,3 +1,18 @@
+/*
+* Martti Aukia 51657228
+* used by both client and server to register a security policy
+* for the RMI exchanges.
+* the file is assumed to be located in the parent directory of cs3524's
+* class files
+* example tree view:
+├── mud.policy
+├── cs3524
+│   └── mud
+│       ├── PolicyReader.class
+│       ├── client
+│       └── server
+│           └── game
+*/
 package cs3524.mud;
 
 import java.net.URI;

@@ -1,5 +1,10 @@
 /*******************************************************************
+* Martti Aukia 51657228
  * cs3515.examples.funnel.ConnectionFactoryImpl                    *
+ * from factory practical of the course
+ * changes made by student:
+ * apply auto formatting
+ * doesn't create a new connection if limit reached
  *******************************************************************/
 
 package cs3524.mud.server;
@@ -23,7 +28,7 @@ import java.rmi.server.UnicastRemoteObject;
  * client.
  *
  * @see ConnectionInterface
- * @see ConnectionImpl
+ * @see Connection
  * @see ConnectionFactoryInterface
  *
  * @author Tim Norman, University of Aberdeen

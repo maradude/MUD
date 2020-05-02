@@ -1,3 +1,8 @@
+/*
+* Martti Aukia 51657228
+Handles user input related functions and passes specific
+commands to the correct class that handles those jobs.
+*/
 package cs3524.mud.client;
 
 import java.io.BufferedReader;
@@ -147,11 +152,5 @@ public class userInputHandler {
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println("Welcome to MUD");
-        System.out.print("> ");
-        // new userInputHandler().run();
     }
 }
