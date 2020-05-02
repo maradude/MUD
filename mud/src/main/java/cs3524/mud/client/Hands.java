@@ -17,6 +17,12 @@ public class Hands {
         this.conn = conn;
     }
 
+    /*
+    * Pickup any thing on the map (player or item)
+    * (note: if you pick up a player, it will just show up in the player inventory
+    * and players can't see the player at the location until they move or leave and
+    * join the game again)
+    */
     public void pickUp(Player player, String thing) throws RemoteException {
         if (thing == null) {
             System.out.println("item not specified for picking up");
