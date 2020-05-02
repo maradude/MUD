@@ -114,6 +114,7 @@ public class GameManager {
                 setActiveCharacter(player);
                 this.currentGame = serverName;
                 System.out.println("Welcome to " + serverName);
+                activeCharacter.lookAround(activeCharacter.getCurrentLocation());
             } else {
                 System.out.println(serverName + " is full, can't join at the moment");
             }
